@@ -130,6 +130,7 @@
 			$('.lottery-unit-' + _this.position).addClass('lottery-unit-action');
 			if(_this.countBackwards === 0 && _this.randomNum === _this.position) {
 				clearInterval(_this.roller);
+				_this.goFlag = false;
 			}
 			_this.position === 7 ? _this.position = 0 : _this.position += 1;
 		},
@@ -146,7 +147,6 @@
 			var _this = this;
 
 			_this.stopButton.on('click', function() {
-				_this.goFlag = false;
 				if(_this.stopFlag !== false) {
 					_this.randomNum = parseInt(Math.random() * 8);
 					_this.countBackwards = 30;
