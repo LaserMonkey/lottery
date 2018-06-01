@@ -1,0 +1,168 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>幸运大转盘</title>
+<style type="text/css">
+	* {
+		box-sizing: border-box;
+	}
+	html, body {
+		margin: 0 auto;
+		padding: 0;
+	}
+	.lottery-frame {
+		margin: 0 auto;
+		width: 330px;
+		overflow: hidden;
+	}
+	.lottery-unit {
+		float: left;
+		margin: 5px;
+		width: 100px;
+		height: 100px;
+		line-height: 100px;
+		font-size: 30px;
+		text-align: center;
+		color: white;
+		background-color: lightblue;
+	}
+	.lottery-unit-go {
+		background-color: lightpink;
+		font-size: 50px;
+		cursor: pointer;
+	}
+	.lottery-unit-go:hover {
+		background-color: lightcoral;
+	}
+	.lottery-unit-action {
+		background-color: lightskyblue;
+	}
+	.stop-button {
+		margin: 5px auto;
+		width: 320px;
+		height: 50px;
+		line-height: 50px;
+		font-size: 30px;
+		text-align: center;
+		color: white;
+		background-color: lightsalmon;
+		cursor: pointer;
+	}
+	.stop-button:hover {
+		background-color: salmon;
+	}
+}
+</style>
+</head>
+
+<body>
+	<div class="lottery-frame">
+		<div class="lottery-unit lottery-unit-0">胖哥</div>
+		<div class="lottery-unit lottery-unit-1">巫师</div>
+		<div class="lottery-unit lottery-unit-2">朱哥</div>
+		<div class="lottery-unit lottery-unit-7">轮空</div>
+		<div class="lottery-unit lottery-unit-go" id="J_go">GO</div>
+		<div class="lottery-unit lottery-unit-3">董哥</div>
+		<div class="lottery-unit lottery-unit-6">丁丁丁</div>
+		<div class="lottery-unit lottery-unit-5">呆呆呆</div>
+		<div class="lottery-unit lottery-unit-4">乐神</div>
+	</div>
+<script type="text/javascript" src="http://res.smzdm.com/resources/public/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="http://res.smzdm.com/resources/public/user/zhiyou/js/userbase.1.0.min.js?2018031312"></script>
+<script type="text/javascript">
+	var lotteryAction = {
+
+		rollNum: 50,
+		position: 0,
+		roller: 0,
+		goFlag: false,
+		stopFlag: false,
+		countBackwards: -1,
+		randomNum: -1,
+
+
+		init: function() {
+
+			this.initDom();
+			this.initEvent();
+		},
+
+		initDom: function() {
+
+			this.beginButton = $('#J_go');
+			this.stopButton = $('#J_stop');
+			this.lotteryUnits = $('.lottery-unit');
+		},
+
+		initEvent: function() {
+
+			this.go();
+			this.stop();
+		},
+
+		go: function() {
+
+			var _this = this;
+
+			_this.beginButton.on('click', function() {
+				if(_this.goFlag) {
+					return;
+				} else {
+					_this.result = -1;
+					_this.randomNum = -1;
+					_this.goFlag = true;
+					_this.stopFlag = true;
+					_this.walker();
+
+				}
+			});
+		},
+
+		roll: function() {
+
+			var _this = this;
+
+			if(_this.randomNum !== -1 && _this.countBackwards !== 0) {
+				_this.countBackwards -= 1;
+			}
+			_this.lotteryUnits.removeClass('lottery-unit-action');
+			$('.lottery-unit-' + _this.position).addClass('lottery-unit-action');
+			if(_this.countBackwards === 0 && _this.randomNum === _this.position) {
+				clearInterval(_this.roller);
+			}
+			_this.position === 7 ? _this.position = 0 : _this.position += 1;
+		},
+
+		walker: function() {
+
+			var _this = this;
+
+			_this.roller = setInterval(function() {_this.roll()}, 50);
+		},
+
+		stop: function() {
+
+			var _this = this;
+
+			_this.stopButton.on('click', function() {
+				_this.goFlag = false;
+				if(_this.stopFlag !== false) {
+					_this.randomNum = parseInt(Math.random() * 7);
+					_this.countBackwards = 20;
+					_this.stopFlag = false;
+				}
+			});
+		}
+	}
+
+	$(function() {
+
+        lotteryAction.init();
+    });
+</script>
+
+<div class="stop-button" id="J_stop">STOP</div>
+</body>
+</html>
